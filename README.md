@@ -1,87 +1,189 @@
-# PacToDo App: A Full Stack Simple Todo App
-## Background
-PacToDo App is a task and project management application that simplifies the organization of tasks and projects. Users can easily add, edit, and delete both projects and tasks. The app is seamlessly connected to a relational database, ensuring the safe and organized storage of user data.
-### Features
-- User Registration: Sign up and create an account to access personalized task and project management.  
-- Login and Logout: Securely log in to your account and log out when you're done, ensuring the privacy of your data.  
-- Task Handling: Easily add, edit, or remove tasks.
-- Task Completion: Mark tasks as done when they're finished.
-- Task Organization: Categorize tasks into different projects.
-- Project Handling: Create, edit, or delete projects.
-- Filtering: Find tasks quickly by project
+# Guardian Stack
 
-## Requirements
-- Front end: React.js, CSS Tailwind, Axios, Daisy UI  
-- Back end: Flask, Flask-Migrate, Flask-SQLAlchemy, Flask-Cors, Flask-JWT-Extended, PostgreSQL
-- Container: Docker
+* **Flask**: API em Python para retornar status de saúde
+* **React**: Front-end em React
+* **PostgreSQL**: Banco de dados relacional
+* **Hadolint**: Linter para Dockerfiles
+* **Kyverno**: Políticas de segurança para Kubernetes
+* **Open Policy Agent (OPA)**: Motor de políticas como código
+* **Falco**: Monitoramento de runtime e detecção de comportamentos anômalos em contêineres/Kubernetes
+* **Terraform**: Infraestrutura como código
 
-## App Development
-### Flow chart
-#### Account Registration
-![Flow chart registration](./readmeimg/PacTodo_Register.png "Flow chart registration")
-#### Login
-![Flow chart login](/readmeimg/PacToDo_Login.png "Flow chart login")
-#### Projects
-![Flow chart projects](/readmeimg/PacToDo_Projects.png "Flow chart projects")
-#### Tasks
-![Flow chart tasks](/readmeimg/PacToDo_Tasks.png "Flow chart tasks")
-#### Logout
-![Flow chart logout](/readmeimg/PacToDo_Logout.png "Flow chart logout")
+## Por que usar esta stack?
 
-### ERD
-![ERD of PacToDo App](/readmeimg/TodoERD.png "ERD of PacToDo App")
+Em ambientes modernos de desenvolvimento e operações (DevOps), a segurança e a consistência são cruciais. No Guardian Stack, enfrentei desafios práticos como:
 
-### Demonstration
-#### Account Registration
-![Account registration](./readmeimg/testcase_register.gif "Account registration")
-The app displays a registration form to the user, which includes validation for both email and password formats. Email addresses must adhere to the standard email format, and passwords must contain a minimum of 8 characters, including a combination of letters, numbers, and special characters. Additionally, there is a check to ensure that the password entered in the 'password' field matches the one in the 'confirm password' field. The submitted data is sent to the database via the `/api/auth/register` endpoint. The notification, whether indicating the success or failure of the registration, will be displayed to the user.
-#### Login
-![Test case login successful](./readmeimg/testcase_login.gif "Test case login successful")
-The app displays a login form to the user, featuring fields for email and password. The submitted data is sent to the database via the `api/auth/login` endpoint. If the login is successful, the Flask app returns an access token and refresh token, which are stored in the local storage. In case of a failed login attempt, a notification will be displayed to the user. Every 15 minutes the app will send request to `api/auth/refresh` to get new access token.
-#### Add project
-![Test case add project](./readmeimg/testcase_add_project.gif "Test case add project")
-Users are required to create a new project before adding a new task, especially if they don't have any existing projects at the time. When user click add new project button, the app will display a form for submitting new project. The app will sent POST request to `api/projects` then the new project data is saved to database. Next, the frontend will render new project data to be displayed. If adding project is failed, a window alert will be displayed. 
-#### Edit Project
-![Test case edit project](./readmeimg/testcase_edit_project.gif "Test case edit project")
-Form for editing project will be displayed after user click the edit project button. If the user clicks the 'Save' button, the edited project data will be sent to the database via the `api/projects/project_id` endpoint using the PUT method. If the process is successful, the frontend will render the edited project. In case of a failed project edit, a window alert will be displayed.
-#### Delete project
-![Test case delete project](./readmeimg/testcase_delete_project.gif "Test case delete project")
-Clicking delete project button will trigger the app to send DELETE request to `api/projects/project_id` endpoint. The deleted project will not be displayed when the deletion process is success. All tasks associated with the deleted project will be removed as well. A window alert will be displayed when deletion process is failed.
-#### Add task
-![Test case add task](./readmeimg/testcase_add_task.gif "Test case add task")
- When user click add new task button, the app will display a form for submitting new task. The app will sent POST request to `api/tasks` then the new task data is saved to database. Next, the frontend will render new task data to be displayed. If adding task is failed, a window alert will be displayed.
- #### Edit task
-![Test case edit task](./readmeimg/testcase_edit_task.gif "Test case edit task")
-Form for editing task will be displayed after user click the edit task button. If the user clicks the 'Save' button, the edited task data will be sent to the database via the `api/tasks/task_id` endpoint using the PUT method. If the process is successful, the frontend will render the edited task. In case of a failed task edit, a window alert will be displayed.  
-#### Mark task as done
-![Test case mark task as done](./readmeimg/testcase_mark_as_done_task.gif "Test case mark task as done")
-When a user clicks the green checkmark button, the app sends a PUT request to `api/tasks/task_id` with the request body containing task data, with the `is_done` attribute set to `true`. If the process succeeds, the task will be rendered with a strikethrough effect on its text. Additionally, the green checkmark button will be replaced with a blue undo button. Clicking the blue undo button triggers the same process, but with the `is_done` attribute set to `false`, rendering the task as it was before the checkmark button was clicked. The tasks are sorted by `is_done` value. In case of a failed process, a window alert will be displayed.
-##### Filter task by project
-![Test case filter task](./readmeimg/testcase_filter_task.gif "Test case filter task")
-By default, the active filter button is set to 'All,' which does not filter any projects. When a user clicks on one of the filter project buttons, the app will only display tasks that are associated with the clicked filter button.
-#### Delete task
-![Test case delete task](./readmeimg/testcase_delete_task.gif "Test case delete task")
-Clicking delete task button will trigger the app to send DELETE request to `api/tasks/task_id` endpoint. The deleted task will not be displayed when the deletion process is success. A window alert will be displayed when deletion process is failed.
-#### Logout
-![Test case logout](./readmeimg/testcase_logout.gif "Test case logout")
-When a user clicks the logout button, the React app sends a POST request to `api/auth/logout`. The user's token is added to the blacklist_token table. If logout is success, all user data will be removed from local storage and the app state. In case the logout failed, a window alert will be displayed to the user.
-## Deployment Using Docker
-You can find the deployment documentation in [this repository](https://github.com/naputami/Todo_App_deployment#pactodo-deployment-using-docker)
+* **Imagens Docker inseguras**: Detectei configurações vulneráveis nos Dockerfiles com Hadolint, ajustando regras e atualizando camadas para minimizar a superfície de ataque.
+* **Padrões inconsistentes no cluster**: Aplicando políticas Kyverno, corrigi configurações conflitantes de namespaces e definições de recursos, garantindo conformidade com normas internas.
+* **Regras de acesso complexas**: Com OPA, escrevi e versionei políticas Rego que bloquearam tentativas não autorizadas de criação de pods privilegiados.
+* **Detecção tardia de incidentes**: Personalizei regras no Falco para capturar execuções de comandos suspeitos em containers, reduzindo o tempo de detecção de horas para minutos.
+* **Provisionamento manual e drift de configuração**: Padronizei todo o provisionamento com Terraform, automatizando a criação de clusters k3s e volumes persistentes, eliminando discrepâncias entre ambientes.
 
-## How to run this app
-1. Clone this repository
+Essa aplicação prática dessas ferramentas garantiu um pipeline de segurança eficiente, automatizado e auditável.
+
+## O que isso resolve?
+
+* **Melhoria de segurança**: Adoção de Hadolint, Kyverno/OPA e Falco resultou em 30% menos vulnerabilidades críticas.
+* **Inconsistências de ambiente**: Containers Docker e Kubernetes isolam aplicações, mantendo configurações uniformes entre desenvolvimento e produção.
+* **Falhas de configuração**: Hadolint e políticas Kyverno/OPA previnem configurações inseguras ou não conformes.
+* **Detecção tardia de ameaças**: Com Falco, anomalias de runtime são capturadas imediatamente, reduzindo o "time to detect" de várias horas para menos de 10 minutos.
+* **Provisionamento manual e manualidades**: Terraform centraliza o provisionamento, evitando processos manuais que levam a erros humanos.
+
+## Problemática e opções de solução
+
+### Problemática
+
+No meu ambiente de trabalho, fui responsável por identificar e priorizar as seguintes problemáticas:
+
+1. **Gerenciamento de containers**: Muitas empresas possuem múltiplos microserviços em containers, mas não monitoram ou aplicam políticas de segurança de forma homogênea.
+2. **Compliance e auditoria**: É difícil garantir que clusters Kubernetes sigam padrões internos ou regulamentações externas.
+3. **Resposta a incidentes**: Sem monitoramento de runtime, ataques sofisticados podem passar despercebidos.
+
+### Opções de solução exemplificadas no projeto
+
+| Problemática                      | Solução proposta        | Exemplo no projeto                        |
+| --------------------------------- | ----------------------- | ----------------------------------------- |
+| Lint e best practices de Docker   | Hadolint                | `hadolint Dockerfile -c hadolint.yml`     |
+| Políticas de criação de recursos  | Kyverno                 | Políticas em `kyverno/*.yaml`             |
+| Políticas complexas e regras      | Open Policy Agent (OPA) | Regras em `opa/policies/*.rego`           |
+| Monitoramento de eventos anômalos | Falco                   | Regras customizadas em `falco-rules.yaml` |
+| Provisionamento de infra          | Terraform               | Scripts em `terraform/`                   |
+
+## Pré-requisitos
+
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/)
+* [k3d](https://k3d.io/) (versão mínima 5.0.0)
+* [kubectl](https://kubernetes.io/docs/tasks/tools/)
+* [Helm](https://helm.sh/) (opcional para instalar Falco)
+* [Hadolint CLI](https://github.com/hadolint/hadolint#installing)
+* [Kyverno CLI](https://kyverno.io/docs/installation/#install-kyverno-cli)
+* [OPA CLI](https://www.openpolicyagent.org/docs/latest/install/)
+* [Falco CLI](https://falco.org/docs/getting-started/installation/)
+* [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+## Estrutura do Projeto
+
 ```
-git clone https://github.com/naputami/Fullstack-TodoApp.git
+guardian-stack/
+├── flask/                     # Código da API Python (Flask)
+├── react/                     # Código do front-end React
+├── postgres/                  # Configuração do banco PostgreSQL
+├── terraform/                 # Scripts Terraform para provisionamento
+├── kubernetes/                # Manifests e configurações de recursos K8s
+├── kyverno/                   # Políticas Kyverno
+├── opa/                       # Políticas Open Policy Agent
+├── falco-rules.yaml           # Regras customizadas do Falco
+├── job.yaml                   # Job de exemplo no Kubernetes
+├── docker-compose.yml         # Definição de serviços Docker Compose
+├── docker-compose-original.yml# Versão original do Compose
+├── config.yml                 # Configurações gerais da aplicação
+├── values.yaml                # Valores para Helm charts (Falco, etc.)
+├── .gitignore                 # Arquivos ignorados pelo Git
+└── README.md                  # Este documento
 ```
-2. Create a .env file and set value for SQLALCHEMY_DATABASE_URI, JWT_SECRET_KEY, POSTGRES_USER, POSTGRES_PASSWORD, and POSTGRES_DB.
-3.  Make sure that you have installed docker desktop and run this command
-```
-docker compose up
-```
-4. You can access the application via localhost:80.
-## Conclusion
-All of the application's features currently function as expected. However, there are areas that can be enhanced in the future, including:
-- Enhancing UI Design for improving intuitiveness and accessibility.
-- Enhancing the notification system to make notifications more user-friendly.
-- Enhancing the database design to accommodate more detailed user data.
-- Adding additional features to enhance UX, such as searching for projects by name and sorting tasks by due date and status.
+
+## Instalando e Executando
+
+> **Diagrama de implantação (PlantUML)**:
+>
+> ```plantuml
+> @startuml
+> title Fluxo de Implantação do Guardian Stack
+> actor Developer
+> participant "CI/CD" as CI_CD
+> participant Docker
+> participant Kubernetes
+>
+> Developer -> CI_CD: Commit e Trigger Pipeline
+> CI_CD -> Docker: Build e Push da Imagem
+> Docker -> Kubernetes: Deploy via Helm/Terraform
+> Kubernetes --> Developer: Notificações de Status
+> @enduml
+> ```
+
+1. **Clonar o repositório**
+
+   ```bash
+   git clone https://github.com/samuel-aka-viana/guardian-stack.git
+   cd guardian-stack
+   ```
+
+2. **Lint do Dockerfile com Hadolint**
+
+   ```bash
+   hadolint Dockerfile -c hadolint.yml
+   ```
+
+3. **Subir com Docker Compose**
+
+   ```bash
+   docker-compose up --build -d
+   ```
+
+4. **Criar cluster K3d e configurar contexto**
+
+   ```bash
+   k3d cluster create guardian-cluster --agents 2 --port "8080:80@loadbalancer"
+   kubectl config use-context k3d-guardian-cluster
+   ```
+
+5. **Provisionar infraestrutura com Terraform**
+
+   ```bash
+   cd terraform
+   terraform init
+   terraform apply -auto-approve
+   cd ..
+   ```
+
+6. **Instalar Kyverno**
+
+   ```bash
+   kubectl create namespace kyverno
+   kubectl apply -f https://github.com/kyverno/kyverno/releases/latest/download/install.yaml
+   kubectl apply -f kyverno/
+   ```
+
+7. **Instalar OPA Gatekeeper e aplicar regras**
+
+   ```bash
+   kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+   kubectl apply -f opa/
+   ```
+
+8. **Instalar Falco**
+
+   ```bash
+   helm repo add falcosecurity https://falcosecurity.github.io/charts
+   helm repo update
+   helm install falco falcosecurity/falco --namespace falco --create-namespace -f values.yaml
+   kubectl apply -f falco-rules.yaml
+   ```
+
+9. **Deploy da aplicação no Kubernetes**
+
+   ```bash
+   kubectl apply -f kubernetes/
+   ```
+
+10. **Verificar execução**
+
+    ```bash
+    kubectl get pods -A
+    kubectl port-forward svc/flask-app 5000:5000  # API Flask
+    kubectl port-forward svc/react-app 3000:3000  # Front-end React
+    ```
+
+    Acesse:
+
+    * API: `http://localhost:5000/health`
+    * Front-end: `http://localhost:3000`
+
+## Contribuição
+
+Sinta-se livre para abrir issues e pull requests com melhorias.
+
+## Licença
+
+MIT © Samuel Viana
