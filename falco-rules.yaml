@@ -1,0 +1,11 @@
+falco:
+  rules_file:
+    - /etc/falco/k8s_audit_rules.yaml
+  fileOutput:
+    enabled: true
+    keepAlive: false
+    filename: /var/log/falco_audit.log
+  jsonOutput: true
+  fileInput:
+    enabled: true
+    filename: /var/log/kubernetes/audit/audit.log
